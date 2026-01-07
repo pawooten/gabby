@@ -1,0 +1,24 @@
+{
+  "name": "gabby-the-labby",
+  "version": "1.0.0",
+  "description": "Gabby is a good Labby",
+  "main": "index.js",
+  "scripts": {
+    "build-client": "tsc --project ./src/client/tsconfig.json && esbuild ./src/client/index.js --bundle --outfile=./public/bundle.js --minify",
+    "start": "tsx ./src/server.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Paul Wooten",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1",
+    "phaser": "^3.90.0",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "concurrently": "^9.2.1",
+    "esbuild": "^0.27.2",
+    "tsx": "^4.21.0"
+  }
+}
