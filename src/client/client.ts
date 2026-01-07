@@ -1,1 +1,2 @@
-console.log('Client module loaded');
+import { exampleGame } from "./phaser-example";
+export { exampleGame };
