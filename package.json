@@ -4,7 +4,7 @@
   "description": "Gabby is a good Labby",
   "main": "index.js",
   "scripts": {
-    "build-client": "tsc --project ./src/client/tsconfig.json && esbuild ./src/client/index.js --bundle --outfile=./public/bundle.js --minify",
+    "build-client": "tsc --project ./src/client/tsconfig.json && esbuild ./src/client/client.ts --bundle --outfile=./public/dist/client.min.js --minify",
     "start": "tsx ./src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
