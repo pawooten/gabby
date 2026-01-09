@@ -34,6 +34,8 @@ class GameScene extends Phaser.Scene {
 
     this.load.image('purple-outlined-circle', 'assets/purple-outlined-circle.png');
     this.load.image('silver-coin', 'assets/silver-coin.png');
+    this.load.image('start', 'assets/start.png');
+    this.load.image('goal', 'assets/goal.png');
   }
 
   create() {
@@ -60,13 +62,27 @@ class GameScene extends Phaser.Scene {
     }
 
     // Draw the silver coins
-    for (const [rowIndex, row] of testLevel.coins.entries()) {
+    for (const [rowIndex, row] of testLevel.items.entries()) {
       for (const [colIndex, cell] of row.split('').entries()) {
         if (cell === 'c') {
           this.add.image(
             center.x + (colIndex - Math.floor(row.length / 2)) * cellDimensions.width,
             center.y + (rowIndex - Math.floor(cells.length / 2)) * cellDimensions.height,
             'silver-coin'
+          );
+        }
+        if (cell === 's') {
+          this.add.image(
+            center.x + (colIndex - Math.floor(row.length / 2)) * cellDimensions.width,
+            center.y + (rowIndex - Math.floor(cells.length / 2)) * cellDimensions.height,
+            'start'
+          );
+        }
+        if (cell === 'g') {
+          this.add.image(
+            center.x + (colIndex - Math.floor(row.length / 2)) * cellDimensions.width,
+            center.y + (rowIndex - Math.floor(cells.length / 2)) * cellDimensions.height,
+            'goal'
           );
         }
       }

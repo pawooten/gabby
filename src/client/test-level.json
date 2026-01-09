@@ -15,19 +15,19 @@
     "gbbgbbgbbgbbgbbgbbgbbgbbg",
     "ggggggggggggggggggggggggg"
   ],
-  "coins": [
-    "        ccccccccccc       ",
-    "      cc          cc      ",
-    "     c              c     ",
-    "    c                     ",
-    "    c                     ",
-    "    c                     ",
-    "    c           ccccccc   ",
-    "    c                 c   ",
-    "    c                 c   ",
-    "    c                 c   ",
-    "     c               c    ",
-    "      cc           cc     ",
-    "        ccccccccccc       "
+  "items": [
+    "c      ccccccccccc      g",
+    "      cc          cc     ",
+    "     c              c    ",
+    "    c                    ",
+    "    c                    ",
+    "    c                    ",
+    "    c           cccccc   ",
+    "    c                c   ",
+    "    c                c   ",
+    "    c                c   ",
+    "     c              c    ",
+    "     cc          cc      ",
+    "s      ccccccccccc      c"
   ]
 }
