@@ -9,6 +9,7 @@ class GameScene extends Phaser.Scene {
     ['red', 'assets/red-square.png'],
     ['blue', 'assets/blue-square.png'],
     ['green', 'assets/green-square.png'],
+    ['green-outlined-square', 'assets/green-outlined-square.png'],
     ['orange', 'assets/orange-square.png'],
     ['purple', 'assets/purple-square.png'],
     ['yellow', 'assets/yellow-square.png']
@@ -16,34 +17,35 @@ class GameScene extends Phaser.Scene {
   private readonly colorNamesByAbbreviation = new Map<string, string>([
     ['r', 'red'],
     ['b', 'blue'],
-    ['g', 'green'],
+    ['g', 'green-outlined-square'],
     ['o', 'orange'],
     ['p', 'purple'],
     ['y', 'yellow']
   ]);
 
   preload() {
+    // Load color square images
     for (const color of this.colorSquaresByName.keys()) {
       if (!color) {
         throw new Error(`Color name is undefined ${color}`);
       }
       this.load.image(color, this.colorSquaresByName.get(color));
     }
+
+    this.load.image('purple-outlined-circle', 'assets/purple-outlined-circle.png');
   }
 
   create() {
     const level: Level = testLevel;
     const cells: string[][] = [];
-    for (const row of testLevel.data) {
+    for (const row of testLevel.static) {
       cells.push(row.split('').map(abbr => this.colorNamesByAbbreviation.get(abbr) || ''));
     }
 
     const cellDimensions = { width: 32, height: 32 };
     const center = { x: 400, y: 300 };
 
-    // 28 cells per row
-
-
+    // Draw the static layer
     for (const [rowIndex, row] of cells.entries()) {
       for (const [colIndex, cell] of row.entries()) {
         if (cell) {
@@ -55,6 +57,8 @@ class GameScene extends Phaser.Scene {
         }
       }
     }
+
+    this.add.image(center.x, center.y, 'purple-outlined-circle');
   }
 }
 

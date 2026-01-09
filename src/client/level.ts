@@ -1,4 +1,4 @@
 export interface Level {
   name: string;
-  data: string[];
+  static: string[];
 }
