@@ -14,5 +14,20 @@
     "gbbgbbgbbgbbgbbgbbgbbgbbg",
     "gbbgbbgbbgbbgbbgbbgbbgbbg",
     "ggggggggggggggggggggggggg"
+  ],
+  "coins": [
+    "        ccccccccccc       ",
+    "      cc          cc      ",
+    "     c              c     ",
+    "    c                     ",
+    "    c                     ",
+    "    c                     ",
+    "    c           ccccccc   ",
+    "    c                 c   ",
+    "    c                 c   ",
+    "    c                 c   ",
+    "     c               c    ",
+    "      cc           cc     ",
+    "        ccccccccccc       "
   ]
 }
