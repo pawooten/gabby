@@ -1,2 +1,2 @@
-import { exampleGame } from "./phaser-example";
+import { exampleGame } from "./game-scene";
 export { exampleGame };

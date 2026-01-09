@@ -3,10 +3,11 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
+  background-color: #837beb;
 }
 canvas {
   display: block;
-  background-color: #837beb;
-  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
   height: 100%;
 }
