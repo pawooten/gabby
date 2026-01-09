@@ -1,4 +1,8 @@
 import Phaser from "phaser";
+
+import testLevel from "./test-level.json";
+import { Level } from "./level";
+
 class GameScene extends Phaser.Scene {
 
   private readonly colorSquaresByName = new Map<string, string>([
@@ -8,6 +12,14 @@ class GameScene extends Phaser.Scene {
     ['orange', 'assets/orange-square.png'],
     ['purple', 'assets/purple-square.png'],
     ['yellow', 'assets/yellow-square.png']
+  ]);
+  private readonly colorNamesByAbbreviation = new Map<string, string>([
+    ['r', 'red'],
+    ['b', 'blue'],
+    ['g', 'green'],
+    ['o', 'orange'],
+    ['p', 'purple'],
+    ['y', 'yellow']
   ]);
 
   preload() {
@@ -20,8 +32,29 @@ class GameScene extends Phaser.Scene {
   }
 
   create() {
-    this.add.image(400, 300, 'yellow');
-    this.add.image(200, 150, 'blue');
+    const level: Level = testLevel;
+    const cells: string[][] = [];
+    for (const row of testLevel.data) {
+      cells.push(row.split('').map(abbr => this.colorNamesByAbbreviation.get(abbr) || ''));
+    }
+
+    const cellDimensions = { width: 32, height: 32 };
+    const center = { x: 400, y: 300 };
+
+    // 28 cells per row
+
+
+    for (const [rowIndex, row] of cells.entries()) {
+      for (const [colIndex, cell] of row.entries()) {
+        if (cell) {
+          this.add.image(
+            center.x + (colIndex - Math.floor(row.length / 2)) * cellDimensions.width,
+            center.y + (rowIndex - Math.floor(cells.length / 2)) * cellDimensions.height,
+            cell
+          );
+        }
+      }
+    }
   }
 }
 
