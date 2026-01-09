@@ -4,8 +4,9 @@
   "description": "Gabby is a good Labby",
   "main": "index.js",
   "scripts": {
-    "build-client": "tsc --project ./src/client/tsconfig.json && esbuild ./src/client/client.ts --bundle --outfile=./public/dist/client.min.js --minify",
-    "start": "tsx ./src/server.ts",
+    "dev-client": "concurrently \"tsc --watch --project ./src/client/tsconfig.json\" \"esbuild ./src/client/client.ts --bundle --outfile=./public/dist/client.min.js --watch\"",
+    "dev-server": "tsx watch src/server.ts",
+    "start": "concurrently \"npm run dev-client\" \"npm run dev-server\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Paul Wooten",
