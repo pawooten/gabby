@@ -18,9 +18,9 @@
   "items": [
     "c      ccccccccccc      g",
     "      cc          cc     ",
-    "     c              c    ",
-    "    c                    ",
-    "    c                    ",
+    "     c      *       c    ",
+    "    c       *            ",
+    "    c       *            ",
     "    c                    ",
     "    c           cccccc   ",
     "    c                c   ",

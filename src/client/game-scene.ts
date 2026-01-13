@@ -2,6 +2,7 @@ import Phaser from "phaser";
 
 import testLevel from "./test-level.json";
 import { Level } from "./level";
+import Star from "./star";
 
 class GameScene extends Phaser.Scene {
 
@@ -36,6 +37,7 @@ class GameScene extends Phaser.Scene {
     this.load.image('silver-coin', 'assets/silver-coin.png');
     this.load.image('start', 'assets/start.png');
     this.load.image('goal', 'assets/goal.png');
+    this.load.image('silver-star', 'assets/silver-star.png');
   }
 
   create() {
@@ -61,7 +63,7 @@ class GameScene extends Phaser.Scene {
       }
     }
 
-    // Draw the silver coins
+    // Draw the items: silver coins, start, goal, silver stars
     for (const [rowIndex, row] of testLevel.items.entries()) {
       for (const [colIndex, cell] of row.split('').entries()) {
         if (cell === 'c') {
@@ -84,6 +86,11 @@ class GameScene extends Phaser.Scene {
             center.y + (rowIndex - Math.floor(cells.length / 2)) * cellDimensions.height,
             'goal'
           );
+        }
+        if (cell === '*') {
+          const x = center.x + (colIndex - Math.floor(row.length / 2)) * cellDimensions.width;
+          const y = center.y + (rowIndex - Math.floor(cells.length / 2)) * cellDimensions.height;
+          new Star(this, x, y);
         }
       }
     }
