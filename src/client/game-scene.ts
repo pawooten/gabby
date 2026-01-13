@@ -4,6 +4,8 @@ import testLevel from "./test-level.json";
 import { Level } from "./level";
 import Star from "./star";
 import Coin from "./coin";
+import GameState from "./game-state";
+import Header from "./header";
 
 class GameScene extends Phaser.Scene {
 
@@ -24,6 +26,9 @@ class GameScene extends Phaser.Scene {
     ['p', 'purple'],
     ['y', 'yellow']
   ]);
+
+  private gameState: GameState | null = null;
+  private header: Header | null = null;
 
   preload() {
     // Load color square images
@@ -64,12 +69,14 @@ class GameScene extends Phaser.Scene {
       }
     }
 
+    let totalCoins = 0;
     // Draw the items: silver coins, start, goal, silver stars
     for (const [rowIndex, row] of testLevel.items.entries()) {
       for (const [colIndex, cell] of row.split('').entries()) {
         if (cell === 'c') {
           const x = center.x + (colIndex - Math.floor(row.length / 2)) * cellDimensions.width;
           const y = center.y + (rowIndex - Math.floor(cells.length / 2)) * cellDimensions.height;
+          totalCoins++;
           new Coin(this, x, y);
         }
         if (cell === 's') {
@@ -93,10 +100,16 @@ class GameScene extends Phaser.Scene {
         }
       }
     }
+
+    this.gameState = new GameState(3, level.name, totalCoins);
+    this.header = new Header(this, this.gameState);
+    console.log(this.gameState);
     this.add.image(center.x, center.y, 'purple-outlined-circle');
   }
 
   update(time: number, delta: number): void {
+    this.header?.update();
+
     const cursors = this.input.keyboard?.createCursorKeys();
     if (cursors && Phaser.Input.Keyboard.JustDown(cursors.space)) {
       console.log('Space key pressed');
