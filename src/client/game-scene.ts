@@ -182,6 +182,7 @@ class GameScene extends Phaser.Scene {
 
       // Check if collision occurred
       if (distance < collisionDistance) {
+        this.drawCollisionX(playerPos.x, playerPos.y);
         this.player.resetToStart();
         const hasLivesLeft = this.gameState?.loseLife();
 
@@ -211,6 +212,7 @@ class GameScene extends Phaser.Scene {
 
       // Check if collision occurred
       if (distance < collisionDistance) {
+        this.drawCollisionX(playerPos.x, playerPos.y);
         this.player.resetToStart();
         const hasLivesLeft = this.gameState?.loseLife();
 
@@ -223,6 +225,30 @@ class GameScene extends Phaser.Scene {
         }
       }
     }
+  }
+
+  private drawCollisionX(x: number, y: number): void {
+    const graphics = this.add.graphics();
+    graphics.lineStyle(4, 0xff0000, 1);
+
+    // Draw X shape
+    const size = 20;
+    graphics.beginPath();
+    graphics.moveTo(x - size, y - size);
+    graphics.lineTo(x + size, y + size);
+    graphics.moveTo(x + size, y - size);
+    graphics.lineTo(x - size, y + size);
+    graphics.strokePath();
+
+    // Fade out and destroy after 1 second
+    this.tweens.add({
+      targets: graphics,
+      alpha: 0,
+      duration: 1000,
+      onComplete: () => {
+        graphics.destroy();
+      }
+    });
   }
 }
 

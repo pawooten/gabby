@@ -75,8 +75,10 @@ class Player {
   }
 
   resetToStart(): void {
-    this.sprite.setPosition(this.startPosition.x, this.startPosition.y);
+    // Stop any ongoing movement tweens
+    this.scene.tweens.killTweensOf(this.sprite);
     this.isMoving = false;
+    this.sprite.setPosition(this.startPosition.x, this.startPosition.y);
   }
 }
 
