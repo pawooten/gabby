@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 
-import testLevel from "./test-level.json";
+import testLevel from "./levels/0-1.json";
 import { Level } from "./level";
 import Star from "./star";
 import Coin from "./coin";
