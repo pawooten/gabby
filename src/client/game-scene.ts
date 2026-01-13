@@ -41,6 +41,7 @@ class GameScene extends Phaser.Scene {
 
     this.load.image('purple-outlined-circle', 'assets/purple-outlined-circle.png');
     this.load.image('silver-coin', 'assets/silver-coin.png');
+    this.load.image('heart', 'assets/heart.png');
     this.load.image('start', 'assets/start.png');
     this.load.image('goal', 'assets/goal.png');
     this.load.image('silver-star', 'assets/silver-star.png');
