@@ -3,6 +3,7 @@ import Phaser from "phaser";
 import testLevel from "./test-level.json";
 import { Level } from "./level";
 import Star from "./star";
+import Coin from "./coin";
 
 class GameScene extends Phaser.Scene {
 
@@ -67,11 +68,9 @@ class GameScene extends Phaser.Scene {
     for (const [rowIndex, row] of testLevel.items.entries()) {
       for (const [colIndex, cell] of row.split('').entries()) {
         if (cell === 'c') {
-          this.add.image(
-            center.x + (colIndex - Math.floor(row.length / 2)) * cellDimensions.width,
-            center.y + (rowIndex - Math.floor(cells.length / 2)) * cellDimensions.height,
-            'silver-coin'
-          );
+          const x = center.x + (colIndex - Math.floor(row.length / 2)) * cellDimensions.width;
+          const y = center.y + (rowIndex - Math.floor(cells.length / 2)) * cellDimensions.height;
+          new Coin(this, x, y);
         }
         if (cell === 's') {
           this.add.image(
