@@ -29,14 +29,14 @@ class Player {
       return;
     }
 
-    // Check for key press and move in grid units
-    if (Phaser.Input.Keyboard.JustDown(cursors.left)) {
+    // Check for key press and move in grid units (allows holding)
+    if (cursors.left.isDown) {
       this.moveInGrid(-this.gridSize, 0);
-    } else if (Phaser.Input.Keyboard.JustDown(cursors.right)) {
+    } else if (cursors.right.isDown) {
       this.moveInGrid(this.gridSize, 0);
-    } else if (Phaser.Input.Keyboard.JustDown(cursors.up)) {
+    } else if (cursors.up.isDown) {
       this.moveInGrid(0, -this.gridSize);
-    } else if (Phaser.Input.Keyboard.JustDown(cursors.down)) {
+    } else if (cursors.down.isDown) {
       this.moveInGrid(0, this.gridSize);
     }
   }
