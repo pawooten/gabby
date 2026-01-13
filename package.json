@@ -7,7 +7,7 @@
     "dev-client": "concurrently \"tsc --watch --project ./src/client/tsconfig.json\" \"esbuild ./src/client/client.ts --bundle --outfile=./public/dist/client.min.js --watch\"",
     "dev-server": "tsx watch src/server.ts",
     "start": "concurrently \"npm run dev-client\" \"npm run dev-server\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "Paul Wooten",
   "license": "ISC",
@@ -18,8 +18,11 @@
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
     "concurrently": "^9.2.1",
     "esbuild": "^0.27.2",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.6",
     "tsx": "^4.21.0"
   }
 }
