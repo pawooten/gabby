@@ -6,6 +6,7 @@ class Player {
   private speed: number = 200;
   private gridSize: number = 32;
   private isMoving: boolean = false;
+  private startPosition: { x: number; y: number };
 
   constructor(
     scene: Phaser.Scene,
@@ -14,6 +15,7 @@ class Player {
     texture: string = 'purple-outlined-circle'
   ) {
     this.scene = scene;
+    this.startPosition = { x, y };
     this.sprite = scene.physics.add.sprite(x, y, texture);
     this.sprite.setCollideWorldBounds(true);
 
@@ -70,6 +72,11 @@ class Player {
 
   getSpeed(): number {
     return this.speed;
+  }
+
+  resetToStart(): void {
+    this.sprite.setPosition(this.startPosition.x, this.startPosition.y);
+    this.isMoving = false;
   }
 }
 

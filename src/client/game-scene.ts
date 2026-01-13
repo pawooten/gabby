@@ -7,6 +7,7 @@ import Coin from "./coin";
 import GameState from "./game-state";
 import Header from "./header";
 import Player from "./player";
+import Hazard from "./hazard";
 
 class GameScene extends Phaser.Scene {
 
@@ -31,6 +32,9 @@ class GameScene extends Phaser.Scene {
   private gameState: GameState | null = null;
   private header: Header | null = null;
   private player!: Player;
+  private coins: Coin[] = [];
+  private stars: Star[] = [];
+  private hazards: Hazard[] = [];
 
   preload() {
     // Load color square images
@@ -63,16 +67,24 @@ class GameScene extends Phaser.Scene {
     for (const [rowIndex, row] of cells.entries()) {
       for (const [colIndex, cell] of row.entries()) {
         if (cell) {
-          this.add.image(
-            center.x + (colIndex - Math.floor(row.length / 2)) * cellDimensions.width,
-            center.y + (rowIndex - Math.floor(cells.length / 2)) * cellDimensions.height,
-            cell
-          );
+          const x = center.x + (colIndex - Math.floor(row.length / 2)) * cellDimensions.width;
+          const y = center.y + (rowIndex - Math.floor(cells.length / 2)) * cellDimensions.height;
+
+          // Create hazards for blue squares
+          if (cell === 'blue') {
+            const hazard = new Hazard(this, x, y, cell);
+            this.hazards.push(hazard);
+          } else {
+            this.add.image(x, y, cell);
+          }
         }
       }
     }
 
     let totalCoins = 0;
+    let startX = center.x;
+    let startY = center.y;
+
     // Draw the items: silver coins, start, goal, silver stars
     for (const [rowIndex, row] of testLevel.items.entries()) {
       for (const [colIndex, cell] of row.split('').entries()) {
@@ -80,14 +92,13 @@ class GameScene extends Phaser.Scene {
           const x = center.x + (colIndex - Math.floor(row.length / 2)) * cellDimensions.width;
           const y = center.y + (rowIndex - Math.floor(cells.length / 2)) * cellDimensions.height;
           totalCoins++;
-          new Coin(this, x, y);
+          const coin = new Coin(this, x, y);
+          this.coins.push(coin);
         }
         if (cell === 's') {
-          this.add.image(
-            center.x + (colIndex - Math.floor(row.length / 2)) * cellDimensions.width,
-            center.y + (rowIndex - Math.floor(cells.length / 2)) * cellDimensions.height,
-            'start'
-          );
+          startX = center.x + (colIndex - Math.floor(row.length / 2)) * cellDimensions.width;
+          startY = center.y + (rowIndex - Math.floor(cells.length / 2)) * cellDimensions.height;
+          this.add.image(startX, startY, 'start');
         }
         if (cell === 'g') {
           this.add.image(
@@ -99,14 +110,15 @@ class GameScene extends Phaser.Scene {
         if (cell === '*') {
           const x = center.x + (colIndex - Math.floor(row.length / 2)) * cellDimensions.width;
           const y = center.y + (rowIndex - Math.floor(cells.length / 2)) * cellDimensions.height;
-          new Star(this, x, y);
+          const star = new Star(this, x, y);
+          this.stars.push(star);
         }
       }
     }
 
     this.gameState = new GameState(3, level.name, totalCoins);
     this.header = new Header(this, this.gameState);
-    this.player = new Player(this, center.x, center.y);
+    this.player = new Player(this, startX, startY);
   }
 
   update(time: number, delta: number): void {
@@ -115,6 +127,101 @@ class GameScene extends Phaser.Scene {
     const cursors = this.input.keyboard?.createCursorKeys();
     if (cursors) {
       this.player.update(cursors);
+    }
+
+    // Check for coin collisions
+    this.checkCoinCollisions();
+
+    // Check for star collisions
+    this.checkStarCollisions();
+
+    // Check for hazard collisions
+    this.checkHazardCollisions();
+  }
+
+  private checkCoinCollisions(): void {
+    const playerPos = this.player.getPosition();
+    const collisionDistance = 20; // Distance threshold for collision
+
+    for (let i = this.coins.length - 1; i >= 0; i--) {
+      const coin = this.coins[i];
+      const coinPos = coin.getPosition();
+
+      // Calculate distance between player and coin
+      const distance = Phaser.Math.Distance.Between(
+        playerPos.x, playerPos.y,
+        coinPos.x, coinPos.y
+      );
+
+      // Check if collision occurred
+      if (distance < collisionDistance) {
+        // Remove coin sprite
+        coin.getSprite().destroy();
+
+        // Remove coin from array
+        this.coins.splice(i, 1);
+
+        // Update game state
+        this.gameState?.collectCoin();
+      }
+    }
+  }
+
+  private checkStarCollisions(): void {
+    const playerPos = this.player.getPosition();
+    const collisionDistance = 20; // Distance threshold for collision
+
+    for (const star of this.stars) {
+      const starPos = star.getStartPosition();
+
+      // Calculate distance between player and star
+      const distance = Phaser.Math.Distance.Between(
+        playerPos.x, playerPos.y,
+        starPos.x, starPos.y
+      );
+
+      // Check if collision occurred
+      if (distance < collisionDistance) {
+        this.player.resetToStart();
+        const hasLivesLeft = this.gameState?.loseLife();
+
+        if (hasLivesLeft) {
+          console.log('Player hit a star! Lives remaining:', this.gameState?.getExtraLives());
+
+        } else {
+          console.log('Game Over!');
+          // TODO: Handle game over
+        }
+      }
+    }
+  }
+
+  private checkHazardCollisions(): void {
+    const playerPos = this.player.getPosition();
+    const collisionDistance = 20; // Distance threshold for collision
+
+    for (const hazard of this.hazards) {
+      const hazardPos = hazard.getPosition();
+
+      // Calculate distance between player and hazard
+      const distance = Phaser.Math.Distance.Between(
+        playerPos.x, playerPos.y,
+        hazardPos.x, hazardPos.y
+      );
+
+      // Check if collision occurred
+      if (distance < collisionDistance) {
+        this.player.resetToStart();
+        const hasLivesLeft = this.gameState?.loseLife();
+
+        if (hasLivesLeft) {
+          console.log('Player hit a hazard! Lives remaining:', this.gameState?.getExtraLives());
+
+        } else {
+          console.log('Game Over!');
+          // TODO: Handle game over
+        }
+      }
     }
   }
 }
