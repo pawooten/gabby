@@ -6,6 +6,7 @@ import Star from "./star";
 import Coin from "./coin";
 import GameState from "./game-state";
 import Header from "./header";
+import Player from "./player";
 
 class GameScene extends Phaser.Scene {
 
@@ -29,6 +30,7 @@ class GameScene extends Phaser.Scene {
 
   private gameState: GameState | null = null;
   private header: Header | null = null;
+  private player!: Player;
 
   preload() {
     // Load color square images
@@ -104,16 +106,15 @@ class GameScene extends Phaser.Scene {
 
     this.gameState = new GameState(3, level.name, totalCoins);
     this.header = new Header(this, this.gameState);
-    console.log(this.gameState);
-    this.add.image(center.x, center.y, 'purple-outlined-circle');
+    this.player = new Player(this, center.x, center.y);
   }
 
   update(time: number, delta: number): void {
     this.header?.update();
 
     const cursors = this.input.keyboard?.createCursorKeys();
-    if (cursors && Phaser.Input.Keyboard.JustDown(cursors.space)) {
-      console.log('Space key pressed');
+    if (cursors) {
+      this.player.update(cursors);
     }
   }
 }
