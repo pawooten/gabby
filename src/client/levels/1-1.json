@@ -1,0 +1,33 @@
+{
+  "name": "1-1: INTRO",
+  "static": [
+    "bggggggg",
+    "bgbbbbbb",
+    "bggggggb",
+    "bbbbbbgb",
+    "bggggggb",
+    "bgbbbbbb",
+    "bggggggb",
+    "bbbbbbgb",
+    "bggggggb",
+    "bgbbbbbb",
+    "bggggggb",
+    "bbbbbbgb",
+    "gggggggb"
+  ],
+  "items": [
+    "       g",
+    "    *   ",
+    "        ",
+    "   *    ",
+    "        ",
+    "    *   ",
+    "        ",
+    "     * ",
+    "        ",
+    " *      ",
+    "        ",
+    "      * ",
+    "s       "
+  ]
+}

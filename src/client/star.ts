@@ -4,7 +4,7 @@ class Star {
   private sprite: Phaser.Physics.Arcade.Sprite;
   private startX: number;
   private startY: number;
-  private readonly bounceRange: number = 100;
+  private readonly bounceRange: number = 32;
 
   constructor(
     scene: Phaser.Scene,
