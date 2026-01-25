@@ -1,7 +1,8 @@
 import Phaser from "phaser";
 
-import testLevel from "./levels/0-1.json";
 import { Level } from "./level";
+import level_0_1 from "./levels/0-1.json";
+import level_1_1 from "./levels/1-1.json";
 import Star from "./star";
 import Coin from "./coin";
 import GameState from "./game-state";
@@ -11,6 +12,11 @@ import Hazard from "./hazard";
 import { Constants } from "./constants";
 
 class GameScene extends Phaser.Scene {
+
+  private readonly levels = new Map<string, Level>([
+    ['0-1', level_0_1 as Level],
+    ['1-1', level_1_1 as Level]
+  ]);
 
   private readonly colorSquaresByName = new Map<string, string>([
     ['red', 'assets/red-square.png'],
@@ -37,6 +43,7 @@ class GameScene extends Phaser.Scene {
   private stars: Star[] = [];
   private hazards: Hazard[] = [];
   private deathLocationMarkers: Phaser.GameObjects.Graphics[] = [];
+  private level: Level | null = null;
 
   preload() {
     // Load color square images
@@ -56,9 +63,20 @@ class GameScene extends Phaser.Scene {
   }
 
   create() {
-    const level: Level = testLevel;
+    // Get level name from URL query parameter, default to '0-1'
+    const urlParams = new URLSearchParams(window.location.search);
+    const levelName = urlParams.get('level') || '0-1';
+
+    // Get the level from compiled levels
+    this.level = this.levels.get(levelName) || this.levels.get('0-1')!;
+
+    if (!this.level) {
+      console.error('Failed to load level data');
+      return;
+    }
+
     const cells: string[][] = [];
-    for (const row of testLevel.static) {
+    for (const row of this.level.static) {
       cells.push(row.split('').map(abbr => this.colorNamesByAbbreviation.get(abbr) || ''));
     }
 
@@ -88,7 +106,7 @@ class GameScene extends Phaser.Scene {
     let startY = center.y;
 
     // Draw the items: silver coins, start, goal, silver stars
-    for (const [rowIndex, row] of testLevel.items.entries()) {
+    for (const [rowIndex, row] of this.level.items.entries()) {
       for (const [colIndex, cell] of row.split('').entries()) {
         if (cell === 'c') {
           const x = center.x + (colIndex - Math.floor(row.length / 2)) * cellDimensions.width;
@@ -118,7 +136,7 @@ class GameScene extends Phaser.Scene {
       }
     }
 
-    this.gameState = new GameState(3, level.name, totalCoins);
+    this.gameState = new GameState(3, this.level.name, totalCoins);
     this.header = new Header(this, this.gameState);
     this.player = new Player(this, startX, startY);
   }
