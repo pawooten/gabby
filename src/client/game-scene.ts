@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 
-import testLevel from "./levels/1-1.json";
+import testLevel from "./levels/0-1.json";
 import { Level } from "./level";
 import Star from "./star";
 import Coin from "./coin";
@@ -8,6 +8,7 @@ import GameState from "./game-state";
 import Header from "./header";
 import Player from "./player";
 import Hazard from "./hazard";
+import { Constants } from "./constants";
 
 class GameScene extends Phaser.Scene {
 
@@ -35,6 +36,7 @@ class GameScene extends Phaser.Scene {
   private coins: Coin[] = [];
   private stars: Star[] = [];
   private hazards: Hazard[] = [];
+  private deathLocationMarkers: Phaser.GameObjects.Graphics[] = [];
 
   preload() {
     // Load color square images
@@ -60,8 +62,8 @@ class GameScene extends Phaser.Scene {
       cells.push(row.split('').map(abbr => this.colorNamesByAbbreviation.get(abbr) || ''));
     }
 
-    const cellDimensions = { width: 32, height: 32 };
-    const center = { x: 400, y: 300 };
+    const cellDimensions = { width: Constants.Cell.Size, height: Constants.Cell.Size };
+    const center = { x: Constants.Center.x, y: Constants.Center.y };
 
     // Draw the static layer
     for (const [rowIndex, row] of cells.entries()) {
@@ -182,7 +184,7 @@ class GameScene extends Phaser.Scene {
 
       // Check if collision occurred
       if (distance < collisionDistance) {
-        this.drawCollisionX(playerPos.x, playerPos.y);
+        this.drawDeathLocationMarker(starPos.x, starPos.y);
         this.player.resetToStart();
         const hasLivesLeft = this.gameState?.loseLife();
 
@@ -191,6 +193,7 @@ class GameScene extends Phaser.Scene {
 
         } else {
           console.log('Game Over!');
+          this.clearDeathLocationMarkers();
           // TODO: Handle game over
         }
       }
@@ -212,7 +215,7 @@ class GameScene extends Phaser.Scene {
 
       // Check if collision occurred
       if (distance < collisionDistance) {
-        this.drawCollisionX(playerPos.x, playerPos.y);
+        this.drawDeathLocationMarker(hazardPos.x, hazardPos.y);
         this.player.resetToStart();
         const hasLivesLeft = this.gameState?.loseLife();
 
@@ -221,34 +224,32 @@ class GameScene extends Phaser.Scene {
 
         } else {
           console.log('Game Over!');
+          this.clearDeathLocationMarkers();
           // TODO: Handle game over
         }
       }
     }
   }
 
-  private drawCollisionX(x: number, y: number): void {
+  private drawDeathLocationMarker(x: number, y: number): void {
     const graphics = this.add.graphics();
-    graphics.lineStyle(4, 0xff0000, 1);
-
-    // Draw X shape
-    const size = 20;
+    graphics.lineStyle(
+      Constants.DeathLocationMarker.LineWidth, Constants.DeathLocationMarker.Color, Constants.DeathLocationMarker.Alpha);
     graphics.beginPath();
-    graphics.moveTo(x - size, y - size);
-    graphics.lineTo(x + size, y + size);
-    graphics.moveTo(x + size, y - size);
-    graphics.lineTo(x - size, y + size);
+    graphics.moveTo(x - Constants.DeathLocationMarker.Size, y - Constants.DeathLocationMarker.Size);
+    graphics.lineTo(x + Constants.DeathLocationMarker.Size, y + Constants.DeathLocationMarker.Size);
+    graphics.moveTo(x + Constants.DeathLocationMarker.Size, y - Constants.DeathLocationMarker.Size);
+    graphics.lineTo(x - Constants.DeathLocationMarker.Size, y + Constants.DeathLocationMarker.Size);
     graphics.strokePath();
+    this.deathLocationMarkers.push(graphics);
+  }
 
-    // Fade out and destroy after 1 second
-    this.tweens.add({
-      targets: graphics,
-      alpha: 0,
-      duration: 1000,
-      onComplete: () => {
-        graphics.destroy();
-      }
-    });
+  private clearDeathLocationMarkers(): void {
+    // Clear all death markers when game is over
+    for (const marker of this.deathLocationMarkers) {
+      marker.destroy();
+    }
+    this.deathLocationMarkers = [];
   }
 }
 
